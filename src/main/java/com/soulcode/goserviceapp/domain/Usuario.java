@@ -4,7 +4,6 @@ import com.soulcode.goserviceapp.domain.enums.Perfil;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Objects;
 
@@ -129,12 +128,19 @@ public class Usuario implements UserDetails{
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, nome, email, senha, perfil);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return Objects.equals(id, usuario.id) &&
+                Objects.equals(nome, usuario.nome) &&
+                Objects.equals(email, usuario.email) &&
+                Objects.equals(senha, usuario.senha) &&
+                perfil == usuario.perfil;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(id, nome, email, senha, habilitado, perfil);
     }
 }
