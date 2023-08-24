@@ -4,7 +4,6 @@ import com.soulcode.goserviceapp.domain.Cliente;
 import com.soulcode.goserviceapp.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -31,7 +30,4 @@ public class ClienteService {
         updatedCliente.setDataNascimento(cliente.getDataNascimento());
         return clienteRepository.save(updatedCliente);
     }
-
-
-
 }

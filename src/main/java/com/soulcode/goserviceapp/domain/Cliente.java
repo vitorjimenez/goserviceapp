@@ -10,7 +10,6 @@ import java.util.Objects;
 
 @Entity
 public class Cliente extends Usuario{
-
     private String telefone;
     @Column(length = 14)
     private String cpf;
