@@ -1,8 +1,11 @@
 package com.soulcode.goserviceapp.service;
 
 import com.soulcode.goserviceapp.domain.Cliente;
+import com.soulcode.goserviceapp.domain.Prestador;
+import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -29,5 +32,18 @@ public class ClienteService {
         updatedCliente.setCpf(cliente.getCpf());
         updatedCliente.setDataNascimento(cliente.getDataNascimento());
         return clienteRepository.save(updatedCliente);
+    }
+
+    public Cliente findAuthenticated(Authentication authentication){
+        if(authentication != null && authentication.isAuthenticated()){
+            Optional<Cliente> cliente = clienteRepository.findByEmail(authentication.getName());
+            if(cliente.isPresent()){
+                return cliente.get();
+            } else {
+                throw new RuntimeException("Cliente não encontrado.");
+            }
+        } else {
+            throw new RuntimeException("Não autenticado");
+        }
     }
 }
