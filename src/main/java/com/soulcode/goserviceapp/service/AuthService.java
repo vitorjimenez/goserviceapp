@@ -45,4 +45,23 @@ public class AuthService {
         }
         throw new RuntimeException("Autenticação necessária.");
     }
+
+    public void updatePassword(Authentication authentication, String senhaAtual, String senhaNova) {
+        if(authentication != null && authentication.isAuthenticated()){
+            String emailAuthenticated = authentication.getName();
+            Optional<Usuario> usuario = usuarioRepository.findByEmail(emailAuthenticated);
+            if(usuario.isPresent()){
+                String passwordEncoded = usuario.get().getSenha();
+                boolean passwordVerified = encoder.matches(senhaAtual, passwordEncoded);
+                if(passwordVerified){
+                    String passwordEncodedNew = encoder.encode(senhaNova);
+                    usuarioRepository.updatePasswordByEmail(passwordEncodedNew, emailAuthenticated);
+                    return;
+                }
+                throw new RuntimeException("Senha incorreta.");
+            }
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        throw new RuntimeException("Autenticação necessária");
+    }
 }
