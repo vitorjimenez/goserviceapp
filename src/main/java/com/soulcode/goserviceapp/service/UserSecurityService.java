@@ -3,6 +3,7 @@ package com.soulcode.goserviceapp.service;
 
 import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.UsuarioRepository;
+import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,7 +24,7 @@ public class UserSecurityService implements UserDetailsService {
         if(result.isPresent()){
             return result.get();
         } else {
-            throw new UsernameNotFoundException("Usuário não encontrado.");
+            throw new UsuarioNaoEncontradoException();
         }
     }
 }

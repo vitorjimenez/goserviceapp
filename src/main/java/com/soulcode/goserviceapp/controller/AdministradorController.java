@@ -1,7 +1,10 @@
 package com.soulcode.goserviceapp.controller;
 
+import com.soulcode.goserviceapp.domain.Servico;
 import com.soulcode.goserviceapp.domain.Usuario;
+import com.soulcode.goserviceapp.service.ServicoService;
 import com.soulcode.goserviceapp.service.UsuarioService;
+import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +22,9 @@ import java.util.concurrent.ExecutionException;
 public class AdministradorController {
 
     @Autowired
+    private ServicoService servicoService;
+
+    @Autowired
     private UsuarioService usuarioService;
 
     @GetMapping(value = "/servicos")
@@ -26,6 +32,16 @@ public class AdministradorController {
         return "servicosAdmin";
     }
 
+    @PostMapping
+    public String createServico(Servico servico, RedirectAttributes attributes){
+        try {
+            servicoService.createServico(servico);
+            attributes.addFlashAttribute("sucessMessage", "Sucesso ao adicionar novo serviço.");
+        } catch (Exception ex){
+            attributes.addFlashAttribute("errorMessage", "Erro ao adicionar novo serviço.");
+        }
+        return  "redirect:/admin/servicos";
+    }
     @GetMapping(value = "/usuarios")
     public ModelAndView usuarios() {
         ModelAndView mv = new ModelAndView("usuariosAdmin");
@@ -52,10 +68,25 @@ public class AdministradorController {
     @PostMapping(value = "/usuarios/disabled")
     public String disableUser(@RequestParam(name = "usuarioId")Long id, RedirectAttributes attributes){
         try{
-            usuarioService.findById(id);
-        }catch (Exception ex){
-
+            usuarioService.disableUser(id);
+        }catch (UsuarioNaoEncontradoException ex){
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex){
+            attributes.addFlashAttribute("errorMessage", "Erro ao encontrar usuário");
         }
         return "redirect:/admin/usuarios";
     }
+
+    @PostMapping(value = "/usuarios/disabled")
+    public String enableUser(@RequestParam(name = "usuarioId")Long id, RedirectAttributes attributes){
+        try{
+            usuarioService.enableUser(id);
+        }catch (UsuarioNaoEncontradoException ex){
+            attributes.addFlashAttribute("errorMessage", ex.getMessage());
+        } catch (Exception ex){
+            attributes.addFlashAttribute("errorMessage", "Erro ao habilitar usuário");
+        }
+        return "redirect:/admin/usuarios";
+    }
+
 }
