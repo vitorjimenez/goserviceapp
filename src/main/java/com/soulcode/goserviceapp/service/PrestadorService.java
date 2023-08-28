@@ -31,7 +31,7 @@ public class PrestadorService {
         }
     }
 
-    public Prestador updated (Prestador prestador){
+    public Prestador update (Prestador prestador){
         Prestador updatedPrestador = this.findById(prestador.getId());
         updatedPrestador.setNome(prestador.getNome());
         updatedPrestador.setEmail(prestador.getEmail());
