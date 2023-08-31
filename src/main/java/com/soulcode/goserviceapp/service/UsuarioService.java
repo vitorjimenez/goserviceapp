@@ -7,15 +7,17 @@ import com.soulcode.goserviceapp.domain.Usuario;
 import com.soulcode.goserviceapp.repository.UsuarioRepository;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements Serializable{
 
     // IoC -> Inversão de Controle
     // DI -> Injeção de Dependência
@@ -34,7 +36,9 @@ public class UsuarioService {
         throw new UsuarioNaoEncontradoException();
     }
 
+    @Cacheable(cacheNames = "redisCache")
     public List<Usuario> findAll(){
+        System.err.println("BUSCANDO NO BANCO DE DADOS. . .");
         return usuarioRepository.findAll();
     }
 

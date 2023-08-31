@@ -7,14 +7,16 @@ import com.soulcode.goserviceapp.repository.PrestadorRepository;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoAutenticadoException;
 import com.soulcode.goserviceapp.service.exceptions.UsuarioNaoEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PrestadorService {
+public class PrestadorService{
 
     @Autowired
     private PrestadorRepository prestadorRepository;
@@ -66,7 +68,9 @@ public class PrestadorService {
     prestadorRepository.save(prestador);
     }
 
+    @Cacheable(cacheNames = "redisCache")
     public List<Prestador> findByServicoId(Long id){
-    return prestadorRepository.findByServicoId(id);
+        System.err.println("BUSCANDO SERVIÇOS DE PRESTADOR NO BANCO. . .");
+        return prestadorRepository.findByServicoId(id);
     }
 }
